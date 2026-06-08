@@ -2,6 +2,13 @@
 import { useState } from "react";
 
 export default function Testimonials() {
+  const [success, setSuccess] = useState("");
+  const [error, setError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -14,10 +21,49 @@ export default function Testimonials() {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+
+    setFieldErrors((prev) => ({
+      ...prev,
+      [e.target.name]: "",
+    }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setFieldErrors({
+      name: "",
+      email: "",
+      message: "",
+    });
+    const errors = {
+      name: "",
+      email: "",
+      message: "",
+    };
+
+    if (!form.name.trim()) {
+      errors.name = "Name is required";
+    }
+
+    if (!form.email.trim()) {
+      errors.email = "Email is required";
+    } else if (!/\S+@\S+\.\S+/.test(form.email)) {
+      errors.email = "Please enter a valid email";
+    }
+
+    if (!form.message.trim()) {
+      errors.message = "Message is required";
+    }
+
+    setFieldErrors(errors);
+
+    if (errors.name || errors.email || errors.message) {
+      setLoading(false);
+      return;
+    }
+
+    setSuccess("");
+    setError("");
     setLoading(true);
 
     const res = await fetch("/api/contact", {
@@ -29,10 +75,14 @@ export default function Testimonials() {
     const data = await res.json();
 
     if (data.success) {
-      alert("Message Sent Successfully 🚀");
+      setSuccess("Message Sent Successfully 🚀");
+      setTimeout(() => {
+        setSuccess("");
+      }, 3000);
+
       setForm({ name: "", email: "", message: "" });
     } else {
-      alert("Something went wrong");
+      setError("Something went wrong. Please try again.");
     }
 
     setLoading(false);
@@ -74,10 +124,27 @@ export default function Testimonials() {
           className="bg-white/5 border border-white/10 backdrop-blur-xl rounded-3xl xl:p-10 p-4"
         >
           <h3 className="text-2xl font-semibold text-white mb-6">Contact Me</h3>
+          {success && (
+            <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50">
+              <div className="bg-[#111] border border-green-500/30 px-8 py-6 rounded-2xl shadow-xl">
+                <p className="text-green-400 xl:text-lg text-sm font-semibold text-center">
+                  Message Sent Successfully
+                </p>
+              </div>
+            </div>
+          )}
+          {error && (
+            <div className="bg-red-500/10 border border-red-500/30 text-red-400 p-3 rounded-xl mb-4">
+              {error}
+            </div>
+          )}
 
           <div className="space-y-6">
             <div>
               <label className="text-sm text-gray-400 block mb-2">Name</label>
+              {fieldErrors.name && (
+                <p className="text-red-400 text-xs mb-2">{fieldErrors.name}</p>
+              )}
               <input
                 type="text"
                 name="name"
@@ -90,6 +157,9 @@ export default function Testimonials() {
 
             <div>
               <label className="text-sm text-gray-400 block mb-2">Email</label>
+              {fieldErrors.email && (
+                <p className="text-red-400 text-xs mb-2">{fieldErrors.email}</p>
+              )}
               <input
                 type="email"
                 name="email"
@@ -104,6 +174,11 @@ export default function Testimonials() {
               <label className="text-sm text-gray-400 block mb-2">
                 Message
               </label>
+              {fieldErrors.message && (
+                <p className="text-red-400 text-xs mb-2">
+                  {fieldErrors.message}
+                </p>
+              )}
               <textarea
                 rows={4}
                 name="message"

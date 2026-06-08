@@ -34,10 +34,15 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json({ success: true });
-  } catch (error) {
-    return NextResponse.json(
-      { success: false, message: "Email failed" },
-      { status: 500 }
-    );
-  }
+  }catch (error: any) {
+  console.error("MAIL ERROR:", error);
+
+  return NextResponse.json(
+    {
+      success: false,
+      message: error?.message,
+    },
+    { status: 500 }
+  );
+}
 }
