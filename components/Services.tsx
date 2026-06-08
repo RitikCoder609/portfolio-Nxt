@@ -62,15 +62,19 @@ export default function Testimonials() {
       return;
     }
 
+    console.log("FETCH CALLED");
+
     setSuccess("");
     setError("");
     setLoading(true);
 
     const res = await fetch("/api/contact", {
+      
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(form),
     });
+    
 
     const data = await res.json();
 
