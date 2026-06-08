@@ -41,7 +41,7 @@ export default function Integrations() {
             return (
               <div
                 key={index}
-                className="w-20 h-20 md:w-24 md:h-24 mx-auto rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md flex items-center justify-center hover:bg-white/10 transition-all duration-300"
+                className="w-14 h-14 md:w-24 md:h-24 mx-auto rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md flex items-center justify-center hover:bg-white/10 transition-all duration-300"
               >
                 <Icon size={36} className={item.color} />
               </div>
