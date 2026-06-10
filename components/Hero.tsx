@@ -20,7 +20,7 @@ export default function Hero() {
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:gap-20 items-center">
           {/* ================= LEFT CONTENT ================= */}
           <div>
-            <h1 className="text-5xl md:text-6xl font-bold leading-tight text-white">
+            <h1 className="text-5xl md:text-6xl font-bold leading-tight text-red-100">
               Software <br /> Engineer
             </h1>
 
